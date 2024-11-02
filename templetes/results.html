@@ -1,0 +1,11 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Food Miles Result</title>
+</head>
+<body>
+  <h1>{{ food['name'] }} travels approximately {{ food['distance'] }} miles to reach your table.</h1>
+  <a href="{{ url_for('index') }}">Calculate another food item</a>
+</body>
+</html>

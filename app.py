@@ -1,24 +1,30 @@
+# app.py
+from flask import Flask, render_template, request
 import sqlite3
-from flask import Flask, render_template, request, url_for, flash, redirect, abort
 
-# make a Flask application object called app
 app = Flask(__name__)
-app.config["DEBUG"] = True
-app.config['SECRET_KEY'] = 'your secret key'
 
-
-# Function to open a connection to the database.db file
+# Function to open a connection to the database
 def get_db_connection():
-    # create connection to the database
     conn = sqlite3.connect('database.db')
-    
-    # allows us to have name-based access to columns
-    # the database connection will return rows we can access like regular Python dictionaries
     conn.row_factory = sqlite3.Row
-
-    #return the connection object
     return conn
 
+@app.route('/')
+def index():
+    conn = get_db_connection()
+    foods = conn.execute('SELECT * FROM foods').fetchall()
+    conn.close()
+    return render_template('index.html', foods=foods)
 
+@app.route('/result', methods=['POST'])
+def result():
+    food_id = request.form['food']
+    conn = get_db_connection()
+    food = conn.execute('SELECT * FROM foods WHERE id = ?', (food_id,)).fetchone()
+    conn.close()
+    return render_template('result.html', food=food)
 
-app.run(port=5000)
+if __name__ == '__main__':
+    app.run(port=5001)
+#hi
